@@ -1,6 +1,6 @@
 {
   "name": "arm-next",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Rust-powered HTML→Markdown for Next.js agents (WebAssembly, Edge-compatible)",
   "license": "MIT",
   "type": "module",
