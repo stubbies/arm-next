@@ -1,0 +1,10 @@
+{
+  "binaryName": "arm_next_node",
+  "package": {
+    "name": "arm-next-node"
+  },
+  "triples": {
+    "defaults": true,
+    "additional": []
+  }
+}

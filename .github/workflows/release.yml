@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: "1.88"
+          components: rustfmt, clippy
+          targets: wasm32-unknown-unknown
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Align release tag with package.json version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VER="${TAG#v}"
+          PKG="$(jq -r .version package.json)"
+          if [ "$VER" != "$PKG" ]; then
+            echo "Release tag version (${VER}) must match package.json version (${PKG})."
+            exit 1
+          fi
+
+      - name: Run tests
+        run: |
+          npm run test:rust
+          npm run test:rust:wasm
+
+      - name: Build TypeScript bundle
+        run: npm run build:lib
+
+      - name: Build WASM (bundler target)
+        run: npm run build:wasm
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

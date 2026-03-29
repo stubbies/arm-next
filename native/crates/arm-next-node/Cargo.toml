@@ -1,0 +1,20 @@
+[package]
+name = "arm-next-node"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+name = "arm_next_node"
+
+[[bin]]
+name = "arm-next-extract"
+path = "src/bin/extract.rs"
+
+[dependencies]
+arm-next-core = { path = "../arm-next-core" }
+napi = { version = "3", default-features = false, features = ["napi8"] }
+napi-derive = "3"
+
+[build-dependencies]
+napi-build = "2"

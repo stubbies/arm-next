@@ -1,0 +1,109 @@
+{
+  "name": "arm-next",
+  "version": "0.1.0",
+  "description": "Rust-powered HTML→Markdown for Next.js agents (WebAssembly, Edge-compatible)",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "./wasm/bundler/arm_next_wasm.js",
+    "./wasm/bundler/arm_next_wasm_bg.js"
+  ],
+  "bin": {
+    "arm-next": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "wasm/bundler",
+    "scripts",
+    "native/Cargo.toml",
+    "native/crates/arm-next-core/Cargo.toml",
+    "native/crates/arm-next-core/src",
+    "native/crates/arm-next-node/Cargo.toml",
+    "native/crates/arm-next-node/build.rs",
+    "native/crates/arm-next-node/napi.config.json",
+    "native/crates/arm-next-node/src",
+    "native/crates/arm-next-wasm/Cargo.toml",
+    "native/crates/arm-next-wasm/src",
+    "README.md",
+    "LICENSE",
+    "rust-toolchain.toml"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./proxy": {
+      "types": "./dist/proxy.d.ts",
+      "import": "./dist/proxy.js",
+      "default": "./dist/proxy.js"
+    },
+    "./routes/markdown": {
+      "types": "./dist/routes/markdown.d.ts",
+      "import": "./dist/routes/markdown.js",
+      "default": "./dist/routes/markdown.js"
+    },
+    "./routes/markdown-edge": {
+      "types": "./dist/routes/markdown-edge.d.ts",
+      "import": "./dist/routes/markdown-edge.js",
+      "default": "./dist/routes/markdown-edge.js"
+    },
+    "./next/with-arm-next": {
+      "types": "./dist/next/with-arm-next.d.ts",
+      "import": "./dist/next/with-arm-next.js",
+      "default": "./dist/next/with-arm-next.js"
+    },
+    "./wasm": {
+      "types": "./wasm/bundler/arm_next_wasm.d.ts",
+      "import": "./wasm/bundler/arm_next_wasm.js",
+      "default": "./wasm/bundler/arm_next_wasm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "npm run build:lib",
+    "build:lib": "tsup",
+    "prepublishOnly": "npm run build:lib && npm run build:wasm",
+    "build:wasm": "wasm-pack build native/crates/arm-next-wasm --target bundler --out-dir ../../../wasm/bundler --release",
+    "build:extract": "cargo build --manifest-path native/Cargo.toml -p arm-next-node --release --bin arm-next-extract",
+    "dev": "npm run dev -w arm-next-example-minimal",
+    "lint": "eslint src tsup.config.ts",
+    "lint:example": "npm run lint -w arm-next-example-minimal",
+    "test:rust": "cargo test --manifest-path native/Cargo.toml -p arm-next-core",
+    "test:rust:wasm": "cargo test --manifest-path native/Cargo.toml -p arm-next-core --no-default-features",
+    "start": "npm run start -w arm-next-example-minimal"
+  },
+  "workspaces": [
+    "examples/minimal"
+  ],
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.1",
+    "next": "16.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tsup": "^8.5.1",
+    "typescript": "^5",
+    "wasm-pack": "^0.13.1"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "keywords": [
+    "nextjs",
+    "markdown",
+    "ai",
+    "agents",
+    "webassembly",
+    "rust"
+  ]
+}

@@ -1,0 +1,19 @@
+[package]
+name = "arm-next-core"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["tiktoken"]
+tiktoken = ["dep:tiktoken-rs"]
+
+[dependencies]
+html-to-markdown-rs = "2.30"
+lol_html = "2.7"
+rayon = "1.10"
+serde_json = "1"
+tiktoken-rs = { version = "0.6", optional = true }
+walkdir = "2"
+
+[dev-dependencies]
+tempfile = "3"

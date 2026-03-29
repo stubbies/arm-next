@@ -1,0 +1,3 @@
+[workspace]
+resolver = "2"
+members = ["crates/arm-next-core", "crates/arm-next-node", "crates/arm-next-wasm"]
