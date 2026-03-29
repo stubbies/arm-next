@@ -22,7 +22,7 @@
 
 # production
 /build
-/dist
+dist/
 
 # misc
 .DS_Store
@@ -45,9 +45,9 @@ yarn-error.log*
 next-env.d.ts
 
 # Prebuilt WASM (listed in package.json `files`; run `npm run build:wasm` before pack/publish)
-/wasm/bundler/
+**/wasm/bundler/
 
 # Rust
-/native/target/
+**/native/target/
 
 

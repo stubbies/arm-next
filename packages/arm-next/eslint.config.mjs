@@ -5,7 +5,7 @@ export default defineConfig([
   ...nextTs,
   globalIgnores([
     "dist/**",
-    "examples/**",
+    "../../examples/**",
     "node_modules/**",
     "wasm/**",
     "native/target/**",

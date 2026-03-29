@@ -1,110 +1,29 @@
-# ARM-Next: Agent-Ready Markdown
+# arm-next
 
-It automatically transforms your web pages into LLM-optimized Markdown and serves them to AI agents via content negotiation (`Accept: text/markdown`).
+Monorepo for **arm-next** — Rust-powered HTML→Markdown for Next.js (WebAssembly, Edge-compatible).
 
-## Features
+- **Published package:** [`packages/arm-next`](./packages/arm-next) (`npm install arm-next`)
+- **Example app:** [`examples/minimal`](./examples/minimal)
 
-- **Rust/WASM Engine:** Blazing fast HTML-to-Markdown conversion.
-- **Agentic Directives:** Control what AI sees using data-ai-ignore and data-ai-meta
-- **Lazy Generation:** Convert pages on-demand and cache them at the CDN edge.
-
-## Install
-
-```bash
-npm install arm-next
-```
-
-## Use in your Next.js app
-
-1. **Config** — use `withArmNext`:
-  ```ts
-   // next.config.ts
-   import type { NextConfig } from "next";
-   import { withArmNext } from "arm-next/next/with-arm-next";
-
-   export default withArmNext(nextConfig);
-  ```
-
-2. **Proxy**:
-  ```ts
-   // src/proxy.ts
-   import { createArmNextProxy } from "arm-next/proxy";
-
-   export const proxy = createArmNextProxy();
-
-  ```
-3. **Create the Route Handler**
-
-Create a catch-all route to handle the conversion. Choose the runtime that fits your needs.
-
-**Option A: Node.js (Recommended for Caching)**
-
-Uses `unstable_cache` to prevent redundant conversions.
-
-```ts
-// app/api/markdown/[[...slug]]/route.ts
-export { GET } from "arm-next/routes/markdown";
-```
-
-**Option B: Edge (Recommended for Low Latency)**
-
-```ts
-// app/api/markdown/[[...slug]]/route.ts
-export { GET } from "arm-next/routes/markdown-edge";
-```
-
-## Curating the AI Experience
-
-ARM-Next gives you fine-grained control over your DOM via data attributes:
-
-```html
-<!-- This will be stripped from the Markdown (ads, nav, etc.) -->
-<nav data-ai-ignore>...</nav>
-
-<!-- Add custom context to the Markdown Frontmatter -->
-<span data-ai-meta="author">Jane Doe</span>
-```
-
-## Example response
-
-````
----
-author: John Doe
-description: Sed ut perspiciatis voluptatem accusantium
-keywords: similique, sunt, culpa, qui, officia, deserunt
-title: Voluptatibus maiores alias doloribus asperiores repellat
----
-
-
-# Introduction
-
-Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.
-...
-````
-
-## Environment
-
-- `ARM_MAX_TOKENS` — default `4096`
-- `ARM_CONTINUED_MESSAGE` — truncation suffix
-- `ARM_CONVERSION_OPTIONS_JSON` — `html-to-markdown-rs` options JSON
-- `ARM_EXTRA_AGENT_UA_SUBSTRINGS` — extra agent `User-Agent` substrings
+Documentation and feature overview live in the [package README](./packages/arm-next/README.md).
 
 ## Development
 
-This repository includes `**examples/minimal**`, linked with `"arm-next": "file:../.."`.
-
 ```bash
 npm install
-npm run build:lib   # compile `dist/` (required once after clone)
-npm run build:wasm  # wasm-pack bundler → `wasm/bundler/`
-npm run dev         # runs the example app
+npm run build        # build the library (TS + optional: build:wasm inside package)
+npm run dev          # example Next.js app
 ```
 
-### Rust tests
-
-From the repo root (Rust toolchain required):
+Rust tests:
 
 ```bash
-npm run test:rust          # default features (tiktoken)
-npm run test:rust:wasm     # same tests + no-tiktoken truncation path (WASM-style)
+npm run test:rust
+npm run test:rust:wasm
 ```
+
+Releases use [Changesets](https://github.com/changesets/changesets): add a changeset from the repo root, merge the “Version Packages” PR, then CI publishes to npm.
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
