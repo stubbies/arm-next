@@ -16,7 +16,7 @@ npm install arm-next
 
 ## Use in your Next.js app
 
-1. **Config** — use `**withArmNext`**:
+1. **Config** — use `withArmNext`:
   ```ts
    // next.config.ts
    import type { NextConfig } from "next";
@@ -64,6 +64,23 @@ ARM-Next gives you fine-grained control over your DOM via data attributes:
 <!-- Add custom context to the Markdown Frontmatter -->
 <span data-ai-meta="author">Jane Doe</span>
 ```
+
+## Example response
+
+````
+---
+author: John Doe
+description: Sed ut perspiciatis voluptatem accusantium
+keywords: similique, sunt, culpa, qui, officia, deserunt
+title: Voluptatibus maiores alias doloribus asperiores repellat
+---
+
+
+# Introduction
+
+Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.
+...
+````
 
 ## Environment
 
