@@ -1,14 +1,32 @@
 import {
+  type NextFetchEvent,
   type NextRequest,
   NextResponse,
   type NextProxy,
 } from "next/server";
 import { ARM_INTERNAL_HEADER, ARM_INTERNAL_VALUE } from "./constants.js";
 
+type NextProxyResult = Awaited<ReturnType<NextProxy>>;
+
 export type ArmNextProxyOptions = {
   /** Default: `/api/ai/markdown` */
   markdownApiPath?: string;
 };
+
+export type WithArmNextProxyOptions = ArmNextProxyOptions;
+
+export type ArmNextUserProxyHandler = (
+  request: NextRequest,
+  event?: NextFetchEvent,
+) => NextProxyResult | Promise<NextProxyResult>;
+
+function isNextResponse(res: NextProxyResult): res is NextResponse {
+  return res instanceof NextResponse;
+}
+
+function armNextIssuedRewrite(res: NextProxyResult): boolean {
+  return isNextResponse(res) && res.headers.has("x-middleware-rewrite");
+}
 
 function wantsMarkdown(request: NextRequest): boolean {
   if (request.headers.get(ARM_INTERNAL_HEADER) === ARM_INTERNAL_VALUE) {
@@ -40,7 +58,7 @@ export function createArmNextProxy(
 ): NextProxy {
   const markdownApiPath = options.markdownApiPath ?? "/api/ai/markdown";
 
-  return function armNextProxy(request: NextRequest) {
+  return function armNextProxy(request: NextRequest, _event: NextFetchEvent) {
     const { pathname } = request.nextUrl;
     if (
       pathname.startsWith("/api/") ||
@@ -66,5 +84,30 @@ export function createArmNextProxy(
     });
     res.headers.set("vary", "accept, user-agent");
     return res;
+  };
+}
+
+/**
+ * Compose existing `proxy.ts` handler with ARM-Next Markdown negotiation.
+ *
+ * @example
+ * ```ts
+ * export default withArmNextProxy(async (req) => {
+ *   // host routing, auth, …
+ *   return NextResponse.next();
+ * });
+ * ```
+ */
+export function withArmNextProxy(
+  handler: ArmNextUserProxyHandler,
+  options: WithArmNextProxyOptions = {},
+): NextProxy {
+  const armNext = createArmNextProxy(options);
+  return async function composed(request: NextRequest, event: NextFetchEvent) {
+    const armRes = await armNext(request, event);
+    if (armNextIssuedRewrite(armRes)) {
+      return armRes;
+    }
+    return handler(request, event);
   };
 }

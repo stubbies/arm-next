@@ -11,7 +11,7 @@
     "test:rust:wasm": "npm run test:rust:wasm -w arm-next",
     "start": "npm run start -w arm-next-example-minimal",
     "changeset": "changeset",
-    "release": "npm run test:rust && npm run test:rust:wasm && changeset publish"
+    "release": "npm run test:rust && npm run test:rust:wasm && npm run prepublishOnly -w arm-next && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0"

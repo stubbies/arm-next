@@ -1,24 +1,10 @@
 import type { NextConfig } from "next";
 
-/**
- * Merge ARM-Next defaults (e.g. static markdown headers) into your Next config.
- */
 export function withArmNext(config: NextConfig = {}): NextConfig {
   const existingHeaders = config.headers;
-  const existingWebpack = config.webpack;
   return {
     ...config,
-    turbopack: {
-      ...config.turbopack,
-      root: config.turbopack?.root ?? process.cwd(),
-    },
-    webpack(cfg, opts) {
-      cfg.experiments = {
-        ...cfg.experiments,
-        asyncWebAssembly: true,
-      };
-      return existingWebpack ? existingWebpack(cfg, opts) : cfg;
-    },
+    ...(config.turbopack != null ? { turbopack: { ...config.turbopack } } : {}),
     async headers() {
       const arm = [
         {

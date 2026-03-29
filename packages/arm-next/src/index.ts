@@ -10,6 +10,9 @@ export {
 } from "./wasm-runtime.js";
 export {
   createArmNextProxy,
+  withArmNextProxy,
   type ArmNextProxyOptions,
+  type ArmNextUserProxyHandler,
+  type WithArmNextProxyOptions,
 } from "./proxy.js";
 export { withArmNext } from "./next/with-arm-next.js";

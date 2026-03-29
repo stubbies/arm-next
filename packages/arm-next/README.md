@@ -25,14 +25,20 @@ npm install arm-next
    export default withArmNext(nextConfig);
   ```
 
-2. **Proxy**:
+2. **Proxy** : Wrap your existing handler (ARM-Next runs first for `Accept: text/markdown` / agent UAs):
+
   ```ts
-   // src/proxy.ts
-   import { createArmNextProxy } from "arm-next/proxy";
+  // src/proxy.ts
+  import { NextResponse } from "next/server";
+  import { withArmNextProxy } from "arm-next/proxy";
 
-   export const proxy = createArmNextProxy();
-
+  export default withArmNextProxy(async (req) => {
+    // your routing, auth, header rewrites…
+    return NextResponse.next();
+  });
   ```
+
+
 3. **Create the Route Handler**
 
 Create a catch-all route to handle the conversion. Choose the runtime that fits your needs.

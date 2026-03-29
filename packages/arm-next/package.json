@@ -1,6 +1,6 @@
 {
   "name": "arm-next",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Rust-powered HTML→Markdown for Next.js agents (WebAssembly, Edge-compatible)",
   "license": "MIT",
   "type": "module",
@@ -11,7 +11,7 @@
     "./wasm/bundler/arm_next_wasm_bg.js"
   ],
   "bin": {
-    "arm-next": "./dist/cli.js"
+    "arm-next": "dist/cli.js"
   },
   "files": [
     "dist",
@@ -67,7 +67,7 @@
     "build": "npm run build:lib",
     "build:lib": "tsup",
     "prepublishOnly": "npm run build:lib && npm run build:wasm",
-    "build:wasm": "wasm-pack build native/crates/arm-next-wasm --target bundler --out-dir ../../../wasm/bundler --release",
+    "build:wasm": "wasm-pack build native/crates/arm-next-wasm --target bundler --out-dir ../../../wasm/bundler --release && node ./scripts/strip-wasm-pack-gitignore.mjs",
     "build:extract": "cargo build --manifest-path native/Cargo.toml -p arm-next-node --release --bin arm-next-extract",
     "lint": "eslint src tsup.config.ts",
     "test:rust": "cargo test --manifest-path native/Cargo.toml -p arm-next-core",
