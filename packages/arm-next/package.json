@@ -6,6 +6,10 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:stubbies/arm-next.git"
+  },
   "sideEffects": [
     "./wasm/bundler/arm_next_wasm.js",
     "./wasm/bundler/arm_next_wasm_bg.js"
